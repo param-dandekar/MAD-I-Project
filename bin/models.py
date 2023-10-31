@@ -1,4 +1,4 @@
-from init import db
+from bin import db
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, Date, Boolean
 from sqlalchemy.orm import declarative_base
 
