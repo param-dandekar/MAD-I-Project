@@ -24,6 +24,7 @@ class Album(Base):
     album_id = Column(Integer, primary_key=True, autoincrement=True)
     artist_id = Column(Integer, ForeignKey('user.user_id'))
     album_name = Column(String(32), nullable=False)
+    genre = Column(String(32))
 
 class Song(Base):
     __tablename__ = 'song'
