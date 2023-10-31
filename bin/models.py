@@ -2,7 +2,6 @@ from init import db
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, Date, Boolean
 from sqlalchemy.orm import declarative_base
 
-
 Base = declarative_base()
 
 class User(Base):
