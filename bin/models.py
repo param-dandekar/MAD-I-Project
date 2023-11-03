@@ -1,5 +1,5 @@
-from bin import db
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, Date, Boolean
+from bin import DATABASE
+from sqlalchemy import Column, Integer, PrimaryKeyConstraint, String, ForeignKey, Text, Date, Boolean
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
@@ -7,12 +7,13 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'user'
     user_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_name = Column(String(32), unique=True, nullable=False)
+    user_name = Column(String(32), nullable=False)
     role_id = Column(Integer, ForeignKey('role.role_id'))
     password = Column(String(32), nullable=False, default='password')
     email = Column(String(32))
     profile_photo = Column(Text, default='default_pic.jpg')
     about_me = Column(Text)
+
 
 class Role(Base):
     __tablename__ = 'role'
@@ -45,8 +46,13 @@ class Playlist(Base):
 
 class PlaylistSong(Base):
     __tablename__ = 'playlist_song'
+    __table_args__ = (
+        PrimaryKeyConstraint('playlist_id', 'song_id'),
+    )
     playlist_id = Column(Integer, ForeignKey('playlist.playlist_id'))
     song_id = Column(Integer, ForeignKey('song.song_id'))
     position = Column(Integer, nullable=False)
+    
+from sqlalchemy import create_engine
 
-
+engine = create_engine(f'{DATABASE}')
