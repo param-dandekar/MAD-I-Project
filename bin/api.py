@@ -8,27 +8,27 @@ from flask_restful import Resource
 
 def make_api(app):
     api = Api(app)
-    api.add_resource(User, '/user/<string:user_id>')
+    api.add_resource(User, '/user/<string:user_id>', methods=["GET", "POST"])
     return api
 
 class User(Resource):
-    def get(self, user_id):
+    def get(user_id):
         user = None
         with Session(m.engine, autoflush=False) as session:
             session.begin()
             q = session.query(m.User).filter(m.User.user_id == user_id).first()
             try:
-                role = session.query(m.Role.role_name).filter(m.Role.role_id == q.role_id).first()
+                role = session.query(m.Role).filter(m.Role.role_id == q.role_id).first()
                 user = {
                     'user_name': q.user_name,
                     'user_id': q.user_id,
-                    'role': role,
+                    'role': role.role_name,
                     'email': q.email,
                     'profile_photo': q.profile_photo,
                     'about_me': q.about_me,
                 }
             except AttributeError:
-                e.not_found_error()
+                e.not_found_error(user_id, 'user_id', 'user')
                 session.rollback()
             session.commit()
         
@@ -61,7 +61,7 @@ class User(Resource):
         return 201
     
 class Role(Resource):
-    def get(self, role_id):
+    def get(role_id):
         role_name = None
         with Session(m.engine, autoflush=False) as session:
             session.begin()

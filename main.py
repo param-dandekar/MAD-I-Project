@@ -1,7 +1,9 @@
-from bin import make_app, models, db
-from bin.api import User
+from bin import make_app
 
 app, api = make_app()
 
+from bin.controllers import *
+
 if __name__ == '__main__':
     app.run(debug=True)
+    
