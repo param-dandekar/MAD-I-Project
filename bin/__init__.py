@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 DATABASE_NAME = 'music_app.db'
-DATABASE = f'sqlite:///./database/{DATABASE_NAME}'
+DATABASE = f'sqlite:///./instance/{DATABASE_NAME}'
 
 def make_app():
     app = Flask(__name__)   
@@ -19,7 +19,7 @@ def make_app():
 
 
 def init_db():
-    # Create a test user
     from bin import api
 
-    api.User.set(user_name='default_user')
+    api.User.add_default()
+    api.Role.add_default()

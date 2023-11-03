@@ -7,15 +7,16 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'user'
     user_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_name = Column(String(32), nullable=False)
-    role_id = Column(Integer, ForeignKey('role.role_id'))
+    user_name = Column(String(32), nullable=False, default='default_user')
+    role_id = Column(Integer, ForeignKey('role.role_id'), default='1')
     password = Column(String(32), nullable=False, default='password')
     email = Column(String(32))
-    profile_photo = Column(Text, default='default_pic.jpg')
+    profile_photo = Column(Text)
     about_me = Column(Text)
 
 
 class Role(Base):
+    roles = {1:'regular', 2:'creator', 3:'admin'}
     __tablename__ = 'role'
     role_id = Column(Integer, primary_key=True, autoincrement=True)
     role_name = Column(String(32), unique=True, nullable=False)
