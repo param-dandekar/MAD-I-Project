@@ -1,6 +1,6 @@
 from bin import models as m
 from bin import errors as e
-from flask_restful import Api
+from flask_restful import Api, Resource, fields, marshal_with
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
@@ -11,18 +11,30 @@ def make_api(app):
     api.add_resource(User, '/user/<string:user_id>', methods=["GET", "POST"])
     return api
 
+user_fields = {
+    'user_name': fields.String,
+    'user_id': fields.Integer,
+    'role_id': fields.Integer,
+    'password': fields.String,
+    'email': fields.String,
+    'profile_photo': fields.String,
+    'about_me': fields.String,
+}
 class User(Resource):
+    # @marshal_with(user_fields)
     def get(user_id):
         user = None
         with Session(m.engine, autoflush=False) as session:
             session.begin()
-            q = session.query(m.User).filter(m.User.user_id == user_id).first()
+            q = session.query(m.User).filter(m.User.user_id == user_id)
+            return q.first()
             try:
                 role = session.query(m.Role).filter(m.Role.role_id == q.role_id).first()
                 user = {
                     'user_name': q.user_name,
                     'user_id': q.user_id,
                     'role': role.role_name,
+                    'password': q.password,
                     'email': q.email,
                     'profile_photo': q.profile_photo,
                     'about_me': q.about_me,
@@ -31,8 +43,13 @@ class User(Resource):
                 e.not_found_error(user_id, 'user_id', 'user')
                 session.rollback()
             session.commit()
-        
         return user
+    
+    def get2(id):
+        user = m.User.query.filter(m.User.user_id == id).first()
+        print(user)
+        return user
+    
     
     def add_default():
         q = None

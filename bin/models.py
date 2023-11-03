@@ -1,10 +1,11 @@
 from bin import DATABASE
+from . import db
 from sqlalchemy import Column, Integer, PrimaryKeyConstraint, String, ForeignKey, Text, Date, Boolean
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
-class User(Base):
+class User(db.Model):
     __tablename__ = 'user'
     user_id = Column(Integer, primary_key=True, autoincrement=True)
     user_name = Column(String(32), nullable=False, default='default_user')
@@ -14,21 +15,28 @@ class User(Base):
     profile_photo = Column(Text)
     about_me = Column(Text)
 
+    def is_active(self):
+       return True
+    def get_id(self):
+       return self.user_id
+    def is_authenticated(self):
+       return self.user_id
 
-class Role(Base):
+
+class Role(db.Model):
     roles = {1:'regular', 2:'creator', 3:'admin'}
     __tablename__ = 'role'
     role_id = Column(Integer, primary_key=True, autoincrement=True)
     role_name = Column(String(32), unique=True, nullable=False)
 
-class Album(Base):
+class Album(db.Model):
     __tablename__ = 'album'
     album_id = Column(Integer, primary_key=True, autoincrement=True)
     artist_id = Column(Integer, ForeignKey('user.user_id'))
     album_name = Column(String(32), nullable=False)
     genre = Column(String(32))
 
-class Song(Base):
+class Song(db.Model):
     __tablename__ = 'song'
     song_id = Column(Integer, primary_key=True, autoincrement=True)
     album_id = Column(Integer, ForeignKey('album.album_id'))
@@ -38,14 +46,14 @@ class Song(Base):
     duration = Column(Integer)
     release_date = Column(Date)
 
-class Playlist(Base):
+class Playlist(db.Model):
     __tablename__ = 'playlist'
     playlist_id = Column(Integer, primary_key=True, autoincrement=True)
     creator_id = Column(Integer, ForeignKey('user.user_id'))
     public = Column(Boolean, nullable=False)
     creation_date = Column(Date)
 
-class PlaylistSong(Base):
+class PlaylistSong(db.Model):
     __tablename__ = 'playlist_song'
     __table_args__ = (
         PrimaryKeyConstraint('playlist_id', 'song_id'),

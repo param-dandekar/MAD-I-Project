@@ -7,7 +7,7 @@
     <body>
         <h1>{{user.user_name}}#{{user.user_id}}</h1>
         {% if user.profile_photo == None %}<img src="{{ url_for('static', filename='profile_photos/default_pic.jpg') }}">
-        {% else %} <img src="{{user.profile_photo}}">
+        {% else %} <img src="{{ url_for('static', filename='profile_photos/'+user.profile_photo) }}">
         {% endif %}
         
         {% if user.role == 'creator' %}
