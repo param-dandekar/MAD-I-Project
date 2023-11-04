@@ -20,5 +20,10 @@
         <h2>About Me</h2>
         {{user.about_me}}
         {% endif %}
+        <form id="logout" action="/logout"  method="GET">
+            <div>
+                <button type="submit">Log out</button>
+            </div>
+        </form>
     </body>
 </html>

@@ -28,29 +28,13 @@ class User(Resource):
             session.begin()
             q = session.query(m.User).filter(m.User.user_id == user_id)
             return q.first()
-            try:
-                role = session.query(m.Role).filter(m.Role.role_id == q.role_id).first()
-                user = {
-                    'user_name': q.user_name,
-                    'user_id': q.user_id,
-                    'role': role.role_name,
-                    'password': q.password,
-                    'email': q.email,
-                    'profile_photo': q.profile_photo,
-                    'about_me': q.about_me,
-                }
-            except AttributeError:
-                e.not_found_error(user_id, 'user_id', 'user')
-                session.rollback()
-            session.commit()
-        return user
     
-    def get2(id):
-        user = m.User.query.filter(m.User.user_id == id).first()
-        print(user)
-        return user
-    
-    
+    def is_admin(user):
+        print(Role.get(user.role_id))
+        if Role.get(user.role_id) == 'admin':
+            return True
+        return False
+
     def add_default():
         q = None
         with Session(m.engine, autoflush=False) as session:
@@ -82,7 +66,7 @@ class Role(Resource):
         role_name = None
         with Session(m.engine, autoflush=False) as session:
             session.begin()
-            role_name = session.query(m.Role.role_name).filter(m.Role.role_id == role_id).first()
+            role_name = session.query(m.Role).filter(m.Role.role_id == role_id).first().role_name
             session.commit()
         return role_name
     
