@@ -8,8 +8,9 @@ def home():
     return redirect('/login')
 
 @app.route("/home_page")
-@login_required
+# @login_required
 def home_page():
+    print(current_user)
     return render_template('home_page.html', user=current_user)
 
 @app.route("/admin_dashboard")

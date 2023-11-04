@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>MusicApp</title>
+    </head>
+    <body>
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <dialog open>
+                {{message}}
+                <form method="dialog">
+                    <button>OK</button>
+                </form>
+            </dialog>
+        {% endfor %}
+    {% endwith %}
+    {% block body %}
+    {% endblock %}
+    </body>
+</html>

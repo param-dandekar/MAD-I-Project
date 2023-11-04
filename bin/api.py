@@ -22,15 +22,14 @@ user_fields = {
 }
 class User(Resource):
     # @marshal_with(user_fields)
-    def get(user_id):
+    def get(user_name: str):
         user = None
         with Session(m.engine, autoflush=False) as session:
             session.begin()
-            q = session.query(m.User).filter(m.User.user_id == user_id)
-            return q.first()
+            q = session.query(m.User).filter(m.User.user_name == user_name).first()
+            return q
     
     def is_admin(user):
-        print(Role.get(user.role_id))
         if Role.get(user.role_id) == 'admin':
             return True
         return False
@@ -49,7 +48,7 @@ class User(Resource):
         return q
     
     def add(user_name, password, email):
-        q = None
+        id = 0
         with Session(m.engine, autoflush=False) as session:
             session.begin()
             new_user = m.User(user_name=user_name, password=password, email=email)
@@ -59,7 +58,7 @@ class User(Resource):
             except IntegrityError:
                 e.already_exists_error(user_name, 'user_name', 'user')
                 session.rollback()
-        return 201
+        return 200
     
 class Role(Resource):
     def get(role_id):
